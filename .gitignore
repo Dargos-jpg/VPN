@@ -1,0 +1,4 @@
+/target
+# configurile reale contin chei private si secretul TOTP
+server.toml
+client.toml

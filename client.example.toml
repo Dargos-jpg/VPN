@@ -1,0 +1,10 @@
+# copiaza in client.toml si completeaza (client.toml e in .gitignore)
+
+server = "127.0.0.1:51900"
+
+# din: vpn-client keygen
+private_key = ""
+public_key = ""
+
+# din: vpn-server keygen (doar cheia publica)
+server_public_key = ""

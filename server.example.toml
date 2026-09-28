@@ -1,0 +1,16 @@
+# copiaza in server.toml si completeaza (server.toml e in .gitignore)
+
+listen = "0.0.0.0:51900"
+
+# din: vpn-server keygen
+private_key = ""
+public_key = ""
+
+# din: vpn-client keygen (doar cheia publica)
+client_public_key = ""
+
+# din: vpn-server enroll
+totp_secret = ""
+
+# cate ferestre TOTP de 30s se accepta in fata/in urma (1 => ~90s toleranta totala)
+skew_steps = 1

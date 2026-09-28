@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = ["proto", "server", "client"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+[workspace.dependencies]
+vpn-proto = { path = "proto" }
+
+# protocol
+snow = "0.9.6"
+hmac = "0.12"
+sha1 = "0.10"
+sha2 = "0.10"
+hkdf = "0.12"
+rand = "0.8"
+data-encoding = "2"
+base64 = "0.22"
+thiserror = "1"
+zeroize = { version = "1", features = ["derive"] }
+
+# binare
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+qrcode = { version = "0.14", default-features = false }
