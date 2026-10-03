@@ -1,6 +1,8 @@
 # copiaza in server.toml si completeaza (server.toml e in .gitignore)
 
 listen = "0.0.0.0:51900"
+# optional: si TCP, pentru retele care blocheaza UDP (portul TCP e vizibil la scanare)
+# listen_tcp = "0.0.0.0:51900"
 
 # din: vpn-server keygen
 private_key = ""
@@ -14,3 +16,15 @@ totp_secret = ""
 
 # cate ferestre TOTP de 30s se accepta in fata/in urma (1 => ~90s toleranta totala)
 skew_steps = 1
+
+# interfata TUN a serverului
+tun_name = "vpn0"
+tun_address = "10.8.0.1"
+tun_prefix = 24
+mtu = 1420
+
+# ip-ul de tunel al clientului - pachetele din tunel cu alta sursa sunt aruncate
+client_tunnel_ip = "10.8.0.2"
+
+# sesiunea e stearsa daca de la client nu vine nimic atat timp (clientul trimite keepalive la 25s)
+session_idle_secs = 180

@@ -1,0 +1,62 @@
+# fuzzing pe codul care primeste bytes din retea (cargo-fuzz / libFuzzer, doar linux + nightly)
+#   cargo +nightly fuzz run packet_parse
+# detalii in NOTES.md, sectiunea fuzzing
+
+[package]
+name = "vpn-proto-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+vpn-proto = { path = "../proto" }
+
+# separat de workspace-ul principal: cere nightly si nu trebuie sa intre in `cargo test`
+[workspace]
+members = ["."]
+
+[[bin]]
+name = "packet_parse"
+path = "fuzz_targets/packet_parse.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "handshake_accept"
+path = "fuzz_targets/handshake_accept.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "handshake_accept_mac"
+path = "fuzz_targets/handshake_accept_mac.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "handshake_tamper"
+path = "fuzz_targets/handshake_tamper.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "session_decrypt"
+path = "fuzz_targets/session_decrypt.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "data_tamper"
+path = "fuzz_targets/data_tamper.rs"
+test = false
+doc = false
+bench = false

@@ -1,0 +1,22 @@
+# interfata grafica a clientului (Tauri 2): ruleaza fara privilegii si vorbeste cu
+# `vpn-client daemon` pe canalul local. workspace separat: tauri trage dupa el biblioteci
+# de desktop (webview) care nu au ce cauta in build-ul serverului sau in CI-ul de linux
+#   cd gui && cargo run
+
+[package]
+name = "vpn-gui"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = ["."]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+vpn-control = { path = "../control" }
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["io-util", "sync", "time", "net"] }

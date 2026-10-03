@@ -9,6 +9,7 @@ hmac.workspace = true
 sha1.workspace = true
 sha2.workspace = true
 hkdf.workspace = true
+blake2.workspace = true
 rand.workspace = true
 data-encoding.workspace = true
 base64.workspace = true

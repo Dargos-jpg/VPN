@@ -5,7 +5,15 @@ edition.workspace = true
 
 [dependencies]
 vpn-proto.workspace = true
+vpn-control.workspace = true
 anyhow.workspace = true
 clap.workspace = true
 serde.workspace = true
+serde_json.workspace = true
 toml.workspace = true
+tokio.workspace = true
+tokio-util.workspace = true
+tun-rs.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Security", "Win32_Security_Authorization"] }

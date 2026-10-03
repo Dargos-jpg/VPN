@@ -1,0 +1,118 @@
+# verificari la fiecare push si pull request
+name: ci
+
+on:
+  push:
+  pull_request:
+  # audit saptamanal: o vulnerabilitate noua intr-o dependinta apare fara ca noi sa schimbam ceva
+  schedule:
+    - cron: "0 6 * * 1"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint-test:
+    name: fmt + clippy + teste (linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+
+  windows:
+    name: build + teste (windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build
+      - run: cargo test
+
+  gui:
+    name: interfata grafica (windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: gui
+      - run: cargo clippy -- -D warnings
+        working-directory: gui
+
+  tunnel:
+    name: test cap-coada tunel (netns)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: sudo apt-get update -q && sudo apt-get install -y -q tcpdump nftables
+      - run: cargo build
+      - run: sudo scripts/netns-test.sh target/debug
+
+  systemd:
+    name: serviciu systemd fara root
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build
+      - run: sudo scripts/systemd-test.sh target/debug
+
+  fuzz:
+    name: fuzzing (30s pe tinta)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-fuzz
+      - run: FUZZ_TARGET_DIR=fuzz/target scripts/fuzz.sh 30
+      # daca a gasit ceva, inputul care produce crash-ul ramane descarcabil
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: fuzz-artifacts
+          path: fuzz/artifacts
+
+  release-bins:
+    name: binare statice linux (aarch64 + x86_64)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-unknown-linux-musl, x86_64-unknown-linux-musl
+      - uses: Swatinem/rust-cache@v2
+      - uses: mlugg/setup-zig@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-zigbuild
+      - run: scripts/build-release.sh
+      # descarcabile din pagina run-ului, folosite la deploy pe VM
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vpn-linux-musl
+          path: dist/
+
+  audit:
+    name: audit dependinte
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+      - run: cargo audit

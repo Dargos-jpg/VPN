@@ -1,0 +1,149 @@
+:root {
+  --bg: #f4f5f7;
+  --card: #ffffff;
+  --text: #16181d;
+  --muted: #6b7280;
+  --border: #e3e5e8;
+  --accent: #1d4ed8;
+  --ok: #16a34a;
+  --warn: #d97706;
+  --bad: #dc2626;
+  --off: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111317;
+    --card: #1a1d23;
+    --text: #e8eaee;
+    --muted: #9aa1ad;
+    --border: #2a2e36;
+    --accent: #4f7dff;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* `display: flex` de pe form ar anula altfel atributul hidden */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.4 "Segoe UI", system-ui, sans-serif;
+  user-select: none;
+}
+
+main {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h1 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+  margin: 2px 0 0;
+  min-height: 1.4em;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--off);
+  flex: none;
+}
+
+.dot.connected { background: var(--ok); }
+.dot.connecting, .dot.need_code { background: var(--warn); }
+.dot.offline { background: var(--bad); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  margin: 0;
+}
+
+dt {
+  color: var(--muted);
+}
+
+dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+input {
+  font: 600 22px/1 ui-monospace, Consolas, monospace;
+  letter-spacing: 6px;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+button {
+  font: 600 14px "Segoe UI", system-ui, sans-serif;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+button.secondary {
+  background: transparent;
+  color: var(--bad);
+  border: 1px solid var(--bad);
+}
+
+.error {
+  color: var(--bad);
+  margin: 0;
+  min-height: 1.4em;
+}

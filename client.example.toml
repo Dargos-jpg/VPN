@@ -1,6 +1,8 @@
 # copiaza in client.toml si completeaza (client.toml e in .gitignore)
 
 server = "127.0.0.1:51900"
+# "udp" (implicit) sau "tcp" daca reteaua blocheaza UDP (serverul trebuie sa aiba listen_tcp)
+transport = "udp"
 
 # din: vpn-client keygen
 private_key = ""
@@ -8,3 +10,27 @@ public_key = ""
 
 # din: vpn-server keygen (doar cheia publica)
 server_public_key = ""
+
+# interfata TUN a clientului, trebuie sa fie egal cu client_tunnel_ip din server.toml
+tun_name = "vpn0"
+tunnel_address = "10.8.0.2"
+tun_prefix = 24
+mtu = 1420
+
+# "split" (implicit): prin tunel merge doar subreteaua de mai sus + `routes`
+# "full": tot traficul (si DNS-ul) prin tunel; serverul trebuie sa aiba NAT (vezi DEPLOY.md)
+mode = "split"
+# retele extra din spatele serverului, in split tunnel
+routes = []
+# DNS folosit prin tunel in full tunnel (pe linux prin systemd-resolved)
+dns = ["1.1.1.1"]
+
+# keepalive trimis daca nu a plecat nimic altceva atat timp (tine deschisa maparea NAT)
+keepalive_secs = 25
+# fara niciun pachet de la server atat timp => sesiune pierduta, se cere cod TOTP nou
+dead_peer_secs = 90
+# schimbarea automata a cheilor, fara cod TOTP (max 150, cheile expira oricum la 180s)
+rekey_secs = 120
+
+# doar pe windows, daca wintun.dll nu e langa executabil / in directorul curent
+# wintun_dll = "C:\\cale\\wintun.dll"

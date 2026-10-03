@@ -1,0 +1,61 @@
+# serviciu systemd pentru vpn-server: user dedicat, fara root, doar CAP_NET_ADMIN (pentru TUN)
+# instalare: deploy/install.sh
+# verificare izolare: systemd-analyze security vpn-server
+
+[Unit]
+Description=vpn-totp server
+Documentation=https://github.com/Dargos-jpg/VPN
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=vpn-totp
+Group=vpn-totp
+ExecStart=/usr/local/bin/vpn-server run --config /etc/vpn-totp/server.toml
+Restart=on-failure
+RestartSec=2
+
+# singura permisiune peste un user normal: crearea si configurarea interfetei TUN
+AmbientCapabilities=CAP_NET_ADMIN
+CapabilityBoundingSet=CAP_NET_ADMIN
+NoNewPrivileges=yes
+
+# sistem de fisiere: totul read-only, /home si /root invizibile, /tmp privat
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadOnlyPaths=/etc/vpn-totp
+UMask=0077
+
+# dispozitive: doar /dev/net/tun
+DevicePolicy=closed
+DeviceAllow=/dev/net/tun rw
+
+# kernel si restul sistemului
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+ProcSubset=pid
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RemoveIPC=yes
+
+# retea: UDP pentru tunel, netlink pentru configurarea interfetei TUN, unix pentru journald
+RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
+
+# apeluri de sistem: doar setul tipic pentru servicii
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target

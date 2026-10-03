@@ -2,7 +2,9 @@
 
 pub mod error;
 pub mod handshake;
+pub mod ip;
 pub mod keys;
+pub mod mac;
 pub mod packet;
 pub mod psk;
 pub mod replay;

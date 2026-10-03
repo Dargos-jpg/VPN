@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>vpn-totp</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <span id="dot" class="dot"></span>
+        <div>
+          <h1 id="state">Se conecteaza la daemon...</h1>
+          <p id="detail" class="muted"></p>
+        </div>
+      </header>
+
+      <section class="card" id="info">
+        <dl>
+          <dt>Server</dt><dd id="server">-</dd>
+          <dt>Mod</dt><dd id="mode">-</dd>
+          <dt>Transport</dt><dd id="transport">-</dd>
+          <dt>Adresa tunel</dt><dd id="tunnel">-</dd>
+          <dt>Conectat de</dt><dd id="uptime">-</dd>
+          <dt>Trafic</dt><dd id="traffic">-</dd>
+          <dt>Rekey-uri</dt><dd id="rekeys">-</dd>
+        </dl>
+      </section>
+
+      <form id="code-form" class="card" autocomplete="off">
+        <label for="code">Cod TOTP de pe telefon</label>
+        <input id="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" />
+        <button id="connect" type="submit">Conectare</button>
+      </form>
+
+      <button id="disconnect" class="secondary" type="button" hidden>Deconectare</button>
+
+      <p id="error" class="error" role="alert"></p>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
